@@ -9,6 +9,7 @@ import {
   Share2,
   ChevronLeft,
   ChevronRight,
+  ArrowLeft,
   Wifi,
   Tv,
   Wind,
@@ -19,7 +20,22 @@ import {
   ShieldCheck,
   X,
 } from "lucide-react";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
 import propertyService from "../../api/propertyService";
+
+// Fix for default marker icon in Leaflet
+import L from "leaflet";
+import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
+
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconUrl: markerIcon,
+  iconRetinaUrl: markerIcon2x,
+  shadowUrl: markerShadow,
+});
 
 // Amenity icon mapping
 const amenityIcons = {
@@ -163,6 +179,15 @@ export default function PropertyDetailPage() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {/* Mobile Back Button */}
+        <button
+          onClick={() => navigate(-1)}
+          className="md:hidden flex items-center gap-2 text-gray-700 hover:text-gray-900 mb-4 -ml-2"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span className="font-medium">Back</span>
+        </button>
+
         {/* Title Section */}
         <div className="mb-6">
           <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-gray-900 mb-2">
@@ -393,10 +418,45 @@ export default function PropertyDetailPage() {
                       Exact location provided after booking
                     </span>
                   </div>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-600 mb-4">
                     Coordinates: {property.location.coordinates[1].toFixed(4)},{" "}
                     {property.location.coordinates[0].toFixed(4)}
                   </p>
+
+                  {/* Interactive Map */}
+                  <div
+                    className="rounded-lg overflow-hidden border border-gray-300"
+                    style={{ height: "400px" }}
+                  >
+                    <MapContainer
+                      center={[
+                        property.location.coordinates[1],
+                        property.location.coordinates[0],
+                      ]}
+                      zoom={13}
+                      style={{ height: "100%", width: "100%" }}
+                    >
+                      <TileLayer
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                      />
+                      <Marker
+                        position={[
+                          property.location.coordinates[1],
+                          property.location.coordinates[0],
+                        ]}
+                      >
+                        <Popup>
+                          <div className="text-center">
+                            <p className="font-semibold">{property.title}</p>
+                            <p className="text-sm text-gray-600">
+                              {property.location?.city}
+                            </p>
+                          </div>
+                        </Popup>
+                      </Marker>
+                    </MapContainer>
+                  </div>
                 </div>
               )}
               <button

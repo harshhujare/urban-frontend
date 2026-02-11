@@ -128,9 +128,20 @@ export default function Navbar() {
                           My Bookings
                         </button>
                         {user?.role === "host" && (
-                          <button className="text-left px-3 sm:px-4 py-2.5 sm:py-3 hover:bg-gray-50 text-sm transition">
-                            My Listings
-                          </button>
+                          <>
+                            <button
+                              onClick={() => {
+                                navigate("/host/dashboard");
+                                setIsOpen(false);
+                              }}
+                              className="text-left px-3 sm:px-4 py-2.5 sm:py-3 hover:bg-gray-50 text-sm transition"
+                            >
+                              Host Dashboard
+                            </button>
+                            <button className="text-left px-3 sm:px-4 py-2.5 sm:py-3 hover:bg-gray-50 text-sm transition">
+                              My Listings
+                            </button>
+                          </>
                         )}
 
                         <div className="h-[1px] bg-gray-200 my-1"></div>

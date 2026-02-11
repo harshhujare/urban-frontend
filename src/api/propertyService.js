@@ -18,7 +18,8 @@ export const propertyService = {
    * Get single property by ID
    */
   async getProperty(id) {
-    return await apiClient.get(`/properties/${id}`);
+    const response = await apiClient.get(`/properties/${id}`);
+    return response.data; // Extract data from {success, data} response
   },
 
   /**
