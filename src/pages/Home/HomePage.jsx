@@ -10,7 +10,7 @@ export default function HomePage() {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
-
+console.log(`backend url${import.meta.env.VITE_API_URL}`);
   // Get filters from URL params
   const [filters, setFilters] = useState({
     q: searchParams.get("q") || "",

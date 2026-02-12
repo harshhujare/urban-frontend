@@ -10,6 +10,7 @@ import {
   ChevronLeft,
   ChevronRight,
   ArrowLeft,
+  Navigation,
   Wifi,
   Tv,
   Wind,
@@ -92,6 +93,24 @@ export default function PropertyDetailPage() {
     } else if (property?.location?.city) {
       window.open(
         `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+          property.location.city + ", India",
+        )}`,
+        "_blank",
+      );
+    }
+  };
+
+  const getDirections = () => {
+    if (property?.location?.coordinates) {
+      const [lng, lat] = property.location.coordinates;
+      // Opens Google Maps with directions from user's current location
+      window.open(
+        `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
+        "_blank",
+      );
+    } else if (property?.location?.city) {
+      window.open(
+        `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
           property.location.city + ", India",
         )}`,
         "_blank",
@@ -291,16 +310,18 @@ export default function PropertyDetailPage() {
                 />
               </div>
             )}
-            {property.images && property.images.length > 0 && (
-              <button
-                onClick={() => setShowAllPhotos(true)}
-                className="mt-4 px-6 py-3 bg-white border-2 border-gray-900 text-gray-900 rounded-lg hover:bg-gray-50 transition font-medium"
-              >
-                Show all {property.images.length} photos
-              </button>
-            )}
           </div>
+          {property.images && property.images.length > 0 && (
+            <button
+              onClick={() => setShowAllPhotos(true)}
+              className="mt-4 px-6 py-3 bg-white border-2 border-gray-900 text-gray-900 rounded-lg hover:bg-gray-50 transition font-medium"
+            >
+              Show all {property.images.length} photos
+            </button>
+          )}
         </div>
+        {/* Extra spacing to prevent overlap */}
+        <div className="mb-8"></div>
 
         {/* Image Slider - Mobile */}
         <div className="md:hidden mb-6">
@@ -410,36 +431,54 @@ export default function PropertyDetailPage() {
                 {property.location?.city}
                 {property.location?.state && `, ${property.location.state}`}
               </p>
-              {property.location?.coordinates && (
-                <div className="bg-gray-100 rounded-lg p-6 mb-4">
+
+              {/* Interactive Map - always show */}
+              <div className="bg-gray-100 rounded-lg p-6 mb-4">
+                {property.location?.coordinates ? (
+                  <>
+                    <div className="flex items-center gap-2 text-gray-700 mb-4">
+                      <MapPin className="w-5 h-5 text-[#FF5A5F]" />
+                      <span className="font-medium">
+                        Exact location provided after booking
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Coordinates: {property.location.coordinates[1].toFixed(4)}
+                      , {property.location.coordinates[0].toFixed(4)}
+                    </p>
+                  </>
+                ) : (
                   <div className="flex items-center gap-2 text-gray-700 mb-4">
                     <MapPin className="w-5 h-5 text-[#FF5A5F]" />
                     <span className="font-medium">
-                      Exact location provided after booking
+                      Approximate area shown - exact location provided after
+                      booking
                     </span>
                   </div>
-                  <p className="text-sm text-gray-600 mb-4">
-                    Coordinates: {property.location.coordinates[1].toFixed(4)},{" "}
-                    {property.location.coordinates[0].toFixed(4)}
-                  </p>
+                )}
 
-                  {/* Interactive Map */}
-                  <div
-                    className="rounded-lg overflow-hidden border border-gray-300"
-                    style={{ height: "400px" }}
+                {/* Interactive Map */}
+                <div
+                  className="rounded-lg overflow-hidden border border-gray-300"
+                  style={{ height: "400px" }}
+                >
+                  <MapContainer
+                    center={
+                      property.location?.coordinates
+                        ? [
+                            property.location.coordinates[1],
+                            property.location.coordinates[0],
+                          ]
+                        : [19.076, 72.8777] // Default to Mumbai if no coordinates
+                    }
+                    zoom={property.location?.coordinates ? 13 : 11}
+                    style={{ height: "100%", width: "100%" }}
                   >
-                    <MapContainer
-                      center={[
-                        property.location.coordinates[1],
-                        property.location.coordinates[0],
-                      ]}
-                      zoom={13}
-                      style={{ height: "100%", width: "100%" }}
-                    >
-                      <TileLayer
-                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                      />
+                    <TileLayer
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                    {property.location?.coordinates && (
                       <Marker
                         position={[
                           property.location.coordinates[1],
@@ -455,16 +494,16 @@ export default function PropertyDetailPage() {
                           </div>
                         </Popup>
                       </Marker>
-                    </MapContainer>
-                  </div>
+                    )}
+                  </MapContainer>
                 </div>
-              )}
+              </div>
               <button
-                onClick={openInGoogleMaps}
-                className="flex items-center gap-2 px-6 py-3 bg-white border-2 border-gray-900 text-gray-900 rounded-lg hover:bg-gray-50 transition font-medium"
+                onClick={getDirections}
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-[#FF5A5F] to-[#E0484D] text-white rounded-lg hover:shadow-lg transition font-semibold text-lg"
               >
-                <MapPin size={20} />
-                Open in Google Maps
+                <Navigation size={24} />
+                Get Directions
               </button>
             </div>
 
