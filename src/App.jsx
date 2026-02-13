@@ -5,6 +5,7 @@ import HomePage from "./pages/Home/HomePage";
 import HostDashboard from "./pages/Host/HostDashboard";
 import AddPropertyPage from "./pages/Host/AddPropertyPage";
 import PropertyDetailPage from "./pages/Properties/PropertyDetailPage";
+import AccountPage from "./pages/Account/AccountPage";
 
 const App = () => {
   return (
@@ -27,6 +28,9 @@ const App = () => {
               path="/host/dashboard/add-property"
               element={<AddPropertyPage />}
             />
+
+            {/* Account Settings Page */}
+            <Route path="/account" element={<AccountPage />} />
           </Routes>
         </div>
       </Router>

@@ -156,6 +156,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Update user in context and cache
+   * @param {Object} userData - Updated user data
+   */
+  const updateUser = (userData) => {
+    setUser(userData);
+    updateAuthCache(userData);
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -166,6 +175,7 @@ export const AuthProvider = ({ children }) => {
         register,
         logout,
         loadUser,
+        updateUser,
       }}
     >
       {children}

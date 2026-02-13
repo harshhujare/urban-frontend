@@ -37,6 +37,15 @@ export const authService = {
   async getCurrentUser() {
     return await apiClient.get("/auth/me");
   },
+
+  /**
+   * Update user profile
+   * @param {Object} userData - { name, email, phone, profilePhoto }
+   * @returns {Promise} Response with updated user data
+   */
+  async updateProfile(userData) {
+    return await apiClient.put("/auth/me", userData);
+  },
 };
 
 export default authService;

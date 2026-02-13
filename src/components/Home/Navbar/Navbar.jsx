@@ -146,7 +146,13 @@ export default function Navbar() {
 
                         <div className="h-[1px] bg-gray-200 my-1"></div>
 
-                        <button className="text-left px-3 sm:px-4 py-2.5 sm:py-3 hover:bg-gray-50 text-sm transition">
+                        <button
+                          onClick={() => {
+                            navigate("/account");
+                            setIsOpen(false);
+                          }}
+                          className="text-left px-3 sm:px-4 py-2.5 sm:py-3 hover:bg-gray-50 text-sm transition"
+                        >
                           Account Settings
                         </button>
                         <button className="text-left px-3 sm:px-4 py-2.5 sm:py-3 hover:bg-gray-50 text-sm transition">
