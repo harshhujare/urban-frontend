@@ -125,6 +125,41 @@ export const AuthProvider = ({ children }) => {
   };
 
   /**
+   * Send OTP to phone number
+   * @param {string} phoneNumber - 10-digit phone number
+   */
+  const sendOtp = async (phoneNumber) => {
+    const data = await authService.sendOtp(phoneNumber);
+    return data;
+  };
+
+  /**
+   * Verify OTP and login/register
+   * @param {string} phoneNumber - 10-digit phone number
+   * @param {string} otp - 4-digit OTP code
+   * @param {string} name - User's name (for new users)
+   */
+  const verifyOtp = async (phoneNumber, otp, name) => {
+    const data = await authService.verifyOtp(phoneNumber, otp, name);
+    setUser(data.user);
+    setIsAuthenticated(true);
+    updateAuthCache(data.user);
+    return data;
+  };
+
+  /**
+   * Login/Register with Google
+   * @param {string} credential - Google ID token
+   */
+  const googleLogin = async (credential) => {
+    const data = await authService.googleLogin(credential);
+    setUser(data.user);
+    setIsAuthenticated(true);
+    updateAuthCache(data.user);
+    return data;
+  };
+
+  /**
    * Logout user
    */
   const logout = async () => {
@@ -173,6 +208,9 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated,
         login,
         register,
+        sendOtp,
+        verifyOtp,
+        googleLogin,
         logout,
         loadUser,
         updateUser,

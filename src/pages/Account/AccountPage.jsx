@@ -20,13 +20,6 @@ export default function AccountPage() {
   const [message, setMessage] = useState({ type: "", text: "" });
   const [hasChanges, setHasChanges] = useState(false);
 
-  // Redirect if not authenticated
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/");
-    }
-  }, [isAuthenticated, navigate]);
-
   // Load user data ONLY on mount
   useEffect(() => {
     if (user) {

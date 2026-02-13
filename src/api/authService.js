@@ -46,6 +46,39 @@ export const authService = {
   async updateProfile(userData) {
     return await apiClient.put("/auth/me", userData);
   },
+
+  /**
+   * Send OTP to phone number
+   * @param {string} phoneNumber - 10-digit phone number (without +91)
+   * @returns {Promise} Response with success message and expiry time
+   */
+  async sendOtp(phoneNumber) {
+    return await apiClient.post("/auth/send-otp", { phoneNumber });
+  },
+
+  /**
+   * Verify OTP and login/register
+   * @param {string} phoneNumber - 10-digit phone number (without +91)
+   * @param {string} otp - 4-digit OTP code
+   * @param {string} name - User's name (required for registration)
+   * @returns {Promise} Response with user data and token
+   */
+  async verifyOtp(phoneNumber, otp, name = null) {
+    return await apiClient.post("/auth/verify-otp", {
+      phoneNumber,
+      otp,
+      ...(name && { name }),
+    });
+  },
+
+  /**
+   * Login/Register with Google
+   * @param {string} credential - Google ID token
+   * @returns {Promise} Response with user data and token
+   */
+  async googleLogin(credential) {
+    return await apiClient.post("/auth/google-login", { credential });
+  },
 };
 
 export default authService;
