@@ -9,8 +9,8 @@ export default function HomePage() {
   const [searchParams] = useSearchParams();
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showFilters, setShowFilters] = useState(false);
-console.log(`backend url${import.meta.env.VITE_API_URL}`);
+  const [showFilters, setShowFilters] = useState(true);
+  console.log(`backend url${import.meta.env.VITE_API_URL}`);
   // Get filters from URL params
   const [filters, setFilters] = useState({
     q: searchParams.get("q") || "",
@@ -96,6 +96,24 @@ console.log(`backend url${import.meta.env.VITE_API_URL}`);
     <div className="min-h-screen bg-white">
       {/* Main Content - Minimalist approach, no hero banner */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-20">
+        {/* Desktop Filter Toggle Button */}
+        <div className="hidden lg:flex items-center justify-between mb-6">
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+            className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-full hover:shadow-md transition"
+          >
+            <SlidersHorizontal className="w-4 h-4" />
+            <span className="text-sm">
+              {showFilters ? "Hide Filters" : "Show Filters"}
+            </span>
+            {activeFilterCount > 0 && (
+              <span className="w-5 h-5 bg-[#FF5A5F] text-white text-xs rounded-full flex items-center justify-center">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
+        </div>
+
         {/* Mobile Filter Button */}
         <div className="lg:hidden mb-6 flex items-center justify-between">
           <div>
@@ -123,15 +141,17 @@ console.log(`backend url${import.meta.env.VITE_API_URL}`);
 
         <div className="flex gap-8">
           {/* Desktop Sidebar Filters */}
-          <div className="hidden lg:block w-80 flex-shrink-0">
-            <div className="sticky top-24">
-              <FilterSidebar
-                filters={filters}
-                onFilterChange={handleFilterChange}
-                onClear={clearFilters}
-              />
+          {showFilters && (
+            <div className="hidden lg:block w-80 flex-shrink-0">
+              <div className="sticky top-24">
+                <FilterSidebar
+                  filters={filters}
+                  onFilterChange={handleFilterChange}
+                  onClear={clearFilters}
+                />
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Property Grid */}
           <div className="flex-1">

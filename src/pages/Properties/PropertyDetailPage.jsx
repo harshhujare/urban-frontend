@@ -84,8 +84,9 @@ export default function PropertyDetailPage() {
   };
 
   const openInGoogleMaps = () => {
-    if (property?.location?.coordinates) {
-      const [lng, lat] = property.location.coordinates;
+    if (property?.coordinates?.latitude && property?.coordinates?.longitude) {
+      const lat = property.coordinates.latitude;
+      const lng = property.coordinates.longitude;
       window.open(
         `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`,
         "_blank",
@@ -101,8 +102,9 @@ export default function PropertyDetailPage() {
   };
 
   const getDirections = () => {
-    if (property?.location?.coordinates) {
-      const [lng, lat] = property.location.coordinates;
+    if (property?.coordinates?.latitude && property?.coordinates?.longitude) {
+      const lat = property.coordinates.latitude;
+      const lng = property.coordinates.longitude;
       // Opens Google Maps with directions from user's current location
       window.open(
         `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
@@ -434,7 +436,8 @@ export default function PropertyDetailPage() {
 
               {/* Interactive Map - always show */}
               <div className="bg-gray-100 rounded-lg p-6 mb-4">
-                {property.location?.coordinates ? (
+                {property.coordinates?.latitude &&
+                property.coordinates?.longitude ? (
                   <>
                     <div className="flex items-center gap-2 text-gray-700 mb-4">
                       <MapPin className="w-5 h-5 text-[#FF5A5F]" />
@@ -443,8 +446,8 @@ export default function PropertyDetailPage() {
                       </span>
                     </div>
                     <p className="text-sm text-gray-600 mb-4">
-                      Coordinates: {property.location.coordinates[1].toFixed(4)}
-                      , {property.location.coordinates[0].toFixed(4)}
+                      Coordinates: {property.coordinates.latitude.toFixed(4)},{" "}
+                      {property.coordinates.longitude.toFixed(4)}
                     </p>
                   </>
                 ) : (
@@ -464,37 +467,44 @@ export default function PropertyDetailPage() {
                 >
                   <MapContainer
                     center={
-                      property.location?.coordinates
+                      property.coordinates?.latitude &&
+                      property.coordinates?.longitude
                         ? [
-                            property.location.coordinates[1],
-                            property.location.coordinates[0],
+                            property.coordinates.latitude,
+                            property.coordinates.longitude,
                           ]
                         : [19.076, 72.8777] // Default to Mumbai if no coordinates
                     }
-                    zoom={property.location?.coordinates ? 13 : 11}
+                    zoom={
+                      property.coordinates?.latitude &&
+                      property.coordinates?.longitude
+                        ? 13
+                        : 11
+                    }
                     style={{ height: "100%", width: "100%" }}
                   >
                     <TileLayer
                       attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                    {property.location?.coordinates && (
-                      <Marker
-                        position={[
-                          property.location.coordinates[1],
-                          property.location.coordinates[0],
-                        ]}
-                      >
-                        <Popup>
-                          <div className="text-center">
-                            <p className="font-semibold">{property.title}</p>
-                            <p className="text-sm text-gray-600">
-                              {property.location?.city}
-                            </p>
-                          </div>
-                        </Popup>
-                      </Marker>
-                    )}
+                    {property.coordinates?.latitude &&
+                      property.coordinates?.longitude && (
+                        <Marker
+                          position={[
+                            property.coordinates.latitude,
+                            property.coordinates.longitude,
+                          ]}
+                        >
+                          <Popup>
+                            <div className="text-center">
+                              <p className="font-semibold">{property.title}</p>
+                              <p className="text-sm text-gray-600">
+                                {property.location?.city}
+                              </p>
+                            </div>
+                          </Popup>
+                        </Marker>
+                      )}
                   </MapContainer>
                 </div>
               </div>

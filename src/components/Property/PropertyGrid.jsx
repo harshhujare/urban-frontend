@@ -125,9 +125,11 @@ function PropertyGridCard({ property, onClick }) {
         {/* Price */}
         <div className="flex items-baseline gap-1">
           <span className="text-lg font-semibold text-gray-900">
-            {formatPrice(property.pricePerNight)}
+            {formatPrice(property.rentAmount || property.pricePerNight || 0)}
           </span>
-          <span className="text-sm text-gray-600">/ night</span>
+          <span className="text-sm text-gray-600">
+            {property.rentType === "per_person" ? "/ person" : "/ night"}
+          </span>
         </div>
       </div>
     </div>
